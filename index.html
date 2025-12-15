@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Math Module 5 Test</title>
+  <style>
+    :root {
+      --primary: #0074d9;
+      --card-bg: #ffffff;
+      --text: #333;
+      --highlight: #fff700;
+    }
+
+    body { 
+      font-family: "Comic Sans MS", "Comic Sans", cursive, sans-serif; 
+      background: linear-gradient(135deg, #0074d9 0%, #005fa3 100%);
+      color: var(--text);
+      margin: 0; 
+      padding: 0; 
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 2rem auto;
+      background: var(--card-bg);
+      padding: 2.5rem;
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+      min-height: 50vh;
+      position: relative;
+      z-index: 10;
+    }
+
+    h1 { text-align: center; color: var(--primary); letter-spacing: 1px; margin-top: 0; }
+
+    /* VISUAL CONTAINER */
+    .visual-container {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+      padding: 20px;
+      background: #fff; 
+      border-radius: 10px;
+    }
+
+    /* Questions & Options */
+    h2 { font-size: 1.4rem; margin-bottom: 1.5rem; color: #2c3e50; }
+    
+    .question-header { display: flex; align-items: flex-start; gap: 10px; }
+    
+    .options-grid { display: grid; gap: 15px; }
+
+    button.answer-btn {
+      background: white;
+      color: var(--primary);
+      border: 3px solid #e0e0e0;
+      padding: 15px;
+      border-radius: 15px;
+      font-size: 1.2rem;
+      font-family: "Comic Sans MS", "Comic Sans", cursive, sans-serif;
+      cursor: pointer;
+      text-align: left;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.2s;
+      box-shadow: 0 4px 0 #e0e0e0;
+      white-space: normal; 
+      word-wrap: break-word;
+      min-height: 60px;
+    }
+
+    button.answer-btn:hover:not(:disabled) { 
+      background: #f0f8ff; 
+      border-color: var(--primary);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 0 #b3d7ff;
+    }
+    
+    button.answer-btn.selected { 
+      background: #cce5ff; 
+      border-color: #004085; 
+      font-weight: bold; 
+      box-shadow: 0 4px 0 #004085;
+    }
+    
+    button.correct { background-color: #d4edda; border-color: #28a745; color: #155724; box-shadow: 0 4px 0 #28a745; }
+    button.incorrect { background-color: #f8d7da; border-color: #dc3545; color: #721c24; box-shadow: 0 4px 0 #dc3545; }
+
+    /* Highlight Class for Reading */
+    .highlight-word {
+      background-color: var(--highlight);
+      border-radius: 3px;
+      box-shadow: 0 0 5px var(--highlight);
+    }
+
+    /* Controls */
+    .controls { margin-top: 30px; text-align: right; }
+    
+    button.action-btn {
+      background: var(--primary); color: white; border: none;
+      padding: 15px 30px; border-radius: 12px; font-size: 1.2rem; cursor: pointer;
+      font-family: "Comic Sans MS", "Comic Sans", cursive, sans-serif;
+      box-shadow: 0 4px 0 #005fa3;
+      transition: transform 0.1s;
+    }
+    button.action-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 0 #005fa3; }
+    button.action-btn:active { transform: translateY(2px); box-shadow: 0 2px 0 #005fa3; }
+    button.action-btn:disabled { background: #ccc; cursor: not-allowed; box-shadow: none; transform: none; }
+    
+    /* Login Screen Styles */
+    .login-box {
+      display: flex; flex-direction: column; gap: 20px; max-width: 400px; margin: 0 auto;
+      background: #f8f9fa; padding: 30px; border-radius: 15px; border: 2px solid #e9ecef;
+    }
+    .input-group {
+      text-align: left;
+    }
+    .input-group label {
+      display: block; font-size: 1.1rem; margin-bottom: 5px; font-weight: bold; color: #555;
+    }
+    .login-input {
+      width: 100%; padding: 15px; font-size: 1.2rem; border: 3px solid #ccc; border-radius: 12px;
+      font-family: "Comic Sans MS", "Comic Sans", cursive, sans-serif; box-sizing: border-box;
+    }
+    .login-input:focus {
+      outline: none; border-color: var(--primary);
+    }
+    .error-msg {
+      color: #dc3545; background: #f8d7da; padding: 10px; border-radius: 8px; 
+      text-align: center; font-weight: bold; display: none; margin-bottom: 15px;
+    }
+
+    /* Teacher Mode Styles */
+    #teacher-screen {
+      text-align: center;
+      background: #e2e6ea;
+      padding: 30px;
+      border-radius: 15px;
+      border: 2px dashed #6c757d;
+    }
+    .teacher-grid { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; margin-top: 20px; }
+    .teacher-btn { 
+      background: #28a745; color: white; padding: 20px 30px; border:none; 
+      border-radius:12px; cursor:pointer; font-size:1.2rem;
+      font-family: "Comic Sans MS", "Comic Sans", cursive, sans-serif;
+      box-shadow: 0 4px 0 #1e7e34;
+      transition: transform 0.1s;
+    }
+    .teacher-btn:hover { transform: translateY(-3px); box-shadow: 0 6px 0 #1e7e34; }
+
+    /* Resume Button Style */
+    #resume-container {
+      margin-bottom: 25px;
+      text-align: center;
+    }
+    .resume-btn {
+      background: #ff851b; color: white; padding: 15px 30px; border:none; 
+      border-radius:15px; cursor:pointer; font-size:1.2rem;
+      font-family: "Comic Sans MS", "Comic Sans", cursive, sans-serif;
+      box-shadow: 0 5px 0 #cc6a15;
+      transition: transform 0.1s;
+      display: inline-block;
+    }
+    .resume-btn:hover { transform: translateY(-3px); box-shadow: 0 8px 0 #cc6a15; }
+
+    .speak-btn { background:none; border:2px solid #ccc; border-radius:50%; cursor:pointer; font-size:1.4rem; padding: 8px 12px; min-width: 45px; }
+    .speak-btn-mini { font-size: 1.2rem; cursor: pointer; padding-left: 10px; z-index: 5; }
+
+    .hidden { display: none !important; }
+    .feedback-box { margin-top: 20px; padding: 20px; border-radius: 12px; display: none; font-size: 1.1rem; border: 2px solid transparent; }
+    
+    /* Progress Bar */
+    .progress-bar { height: 12px; background: #e9ecef; border-radius: 6px; margin-bottom: 25px; overflow:hidden; }
+    .progress-fill { height: 100%; background: #28a745; width: 0%; transition: width 0.3s; }
+
+    /* Results Screen */
+    .results-row { display: flex; justify-content: center; align-items: baseline; gap: 15px; margin: 10px 0; }
+
+    #confetti-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 99; }
+
+    @media(max-width: 600px) {
+      .container { margin: 10px; padding: 1.5rem; }
+      h1 { font-size: 1.5rem; }
+      button.answer-btn { font-size: 1rem; padding: 12px; }
+      .results-row { flex-direction: column; align-items: center; gap: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="confetti-canvas"></canvas>
+
+  <div class="container">
+    <h1>Math Module 5 Test</h1>
+    
+    <div id="start-screen">
+      <div id="resume-container" class="hidden">
+        <p style="margin-bottom: 10px; font-weight: bold; color: #555;">Welcome back! You have an unfinished test.</p>
+        <button class="resume-btn" onclick="app.resumeTest()">Resume Test ↩️</button>
+        <hr style="margin: 20px 0; opacity: 0.3;">
+      </div>
+
+      <div id="login-container" class="login-box">
+        <div class="error-msg" id="login-error"></div>
+        
+        <div class="input-group">
+          <label for="student-name">Student Name:</label>
+          <input type="text" id="student-name" class="login-input" placeholder="Enter your name">
+        </div>
+        
+        <div class="input-group">
+          <label for="test-code">Test Code:</label>
+          <input type="text" id="test-code" class="login-input" placeholder="Enter Test Code" onkeyup="if(event.key==='Enter') app.validateLogin()">
+        </div>
+
+        <button class="action-btn" onclick="app.validateLogin()">Start Test</button>
+      </div>
+
+      <div id="teacher-screen" class="hidden">
+        <h3 style="color:#2c3e50; margin-top:0;">👩‍🏫 Teacher Mode</h3>
+        <p style="font-size: 1.1rem;">Assign a test for: <span id="teacher-student-name" style="font-weight:bold; color:var(--primary); font-size:1.3rem;"></span></p>
+        
+        <div class="teacher-grid">
+          <button class="teacher-btn" onclick="app.startTest('A')">Assign Form A</button>
+          <button class="teacher-btn" onclick="app.startTest('B')">Assign Form B</button>
+          <button class="teacher-btn" onclick="app.startTest('C')">Assign Form C</button>
+        </div>
+        
+        <br>
+        <button class="action-btn" style="background:#6c757d; font-size:1rem; padding:10px 20px;" onclick="app.cancelTeacherMode()">Cancel</button>
+      </div>
+    </div>
+
+    <div id="quiz-screen" class="hidden">
+      <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+      <div style="display:flex; justify-content:space-between; color:#666; font-size:1rem; margin-bottom:10px; font-weight:bold;">
+        <span id="progress-text"></span>
+        <span id="score-text"></span>
+      </div>
+
+      <div id="visual-container" class="visual-container hidden"></div>
+
+      <div class="question-header">
+        <h2 id="question-text"></h2>
+        <button class="speak-btn" onclick="app.speakCurrentQuestion()" aria-label="Read Question">🔊</button>
+      </div>
+
+      <div id="answers" class="options-grid"></div>
+      <div id="feedback" class="feedback-box"></div>
+
+      <div class="controls">
+        <button id="submit-btn" class="action-btn" onclick="app.submitAnswer()" disabled>Submit Answer</button>
+        <button id="next-btn" class="action-btn hidden" onclick="app.nextQuestion()">Next Question ➡️</button>
+      </div>
+    </div>
+
+    <div id="end-screen" class="hidden" style="text-align:center;">
+      <h2 id="end-title">Test Complete!</h2>
+      <p id="student-display-name" style="font-size: 1.5rem; color: #555; margin-bottom: 5px; font-weight:bold;"></p>
+      
+      <div class="results-row">
+        <p id="final-percent" style="font-size: 4rem; font-weight: bold; color:var(--primary); margin:0;">0%</p>
+        <p id="final-letter-grade" style="font-size: 4rem; font-weight: bold; margin:0;">F</p>
+      </div>
+      
+      <p id="final-score" style="font-size: 1.4rem; margin-top:0; color:#555;"></p>
+      <p id="final-msg" style="font-size: 1.5rem; margin-top:20px; font-weight:bold; color: #28a745;"></p>
+      <br><br>
+      <button class="action-btn" onclick="app.restart()">Return to Menu</button>
+    </div>
+  </div>
+
+<script>
+/** * VISUAL GENERATORS (SVG) */
+function drawAreaModel(sideLabel, topLabel1, topLabel2, inner1, inner2) {
+  const fmt = (txt) => txt ? txt : "";
+  return `
+  <svg width="340" height="160" viewBox="0 0 340 160" xmlns="http://www.w3.org/2000/svg">
+    <rect x="60" y="50" width="240" height="90" fill="white" stroke="black" stroke-width="2.5"/>
+    <line x1="180" y1="50" x2="180" y2="140" stroke="black" stroke-width="2.5"/>
+    <text x="120" y="40" font-family="Comic Sans MS, Comic Sans, cursive" font-size="22" text-anchor="middle" fill="black" font-weight="bold">${topLabel1}</text>
+    <text x="240" y="40" font-family="Comic Sans MS, Comic Sans, cursive" font-size="22" text-anchor="middle" fill="black" font-weight="bold">${topLabel2}</text>
+    <text x="45" y="100" font-family="Comic Sans MS, Comic Sans, cursive" font-size="22" text-anchor="end" fill="black" font-weight="bold">${sideLabel}</text>
+    <text x="120" y="105" font-family="Comic Sans MS, Comic Sans, cursive" font-size="20" text-anchor="middle" fill="#333">${fmt(inner1)}</text>
+    <text x="240" y="105" font-family="Comic Sans MS, Comic Sans, cursive" font-size="20" text-anchor="middle" fill="#333">${fmt(inner2)}</text>
+  </svg>`;
+}
+
+function drawBlocks(rows, h, t, o) {
+  let svg = "";
+  let y = 10;
+  for(let i=0; i<rows; i++) {
+    let x = 10;
+    for(let j=0; j<h; j++) {
+      svg += `<rect x="${x}" y="${y}" width="40" height="40" fill="#e0e0e0" stroke="black" stroke-width="1.5"/>
+              <line x1="${x+10}" y1="${y}" x2="${x+10}" y2="${y+40}" stroke="black" stroke-opacity="0.2"/>
+              <line x1="${x+20}" y1="${y}" x2="${x+20}" y2="${y+40}" stroke="black" stroke-opacity="0.2"/>
+              <line x1="${x+30}" y1="${y}" x2="${x+30}" y2="${y+40}" stroke="black" stroke-opacity="0.2"/>
+              <line x1="${x}" y1="${y+10}" x2="${x+40}" y2="${y+10}" stroke="black" stroke-opacity="0.2"/>
+              <line x1="${x}" y1="${y+20}" x2="${x+40}" y2="${y+20}" stroke="black" stroke-opacity="0.2"/>
+              <line x1="${x}" y1="${y+30}" x2="${x+40}" y2="${y+30}" stroke="black" stroke-opacity="0.2"/>`;
+      x += 45;
+    }
+    for(let j=0; j<t; j++) {
+      svg += `<rect x="${x}" y="${y}" width="10" height="40" fill="#e0e0e0" stroke="black" stroke-width="1.5"/>`;
+      for(let k=10; k<40; k+=10) svg += `<line x1="${x}" y1="${y+k}" x2="${x+10}" y2="${y+k}" stroke="black" stroke-opacity="0.2"/>`;
+      x += 15;
+    }
+    for(let j=0; j<o; j++) {
+      svg += `<rect x="${x}" y="${y+30}" width="10" height="10" fill="#e0e0e0" stroke="black" stroke-width="1.5"/>`;
+      x += 15;
+    }
+    y += 50;
+  }
+  return `<svg width="350" height="${y}" viewBox="0 0 350 ${y}" xmlns="http://www.w3.org/2000/svg">${svg}</svg>`;
+}
+
+/** DATA SECTION */
+const tests = {
+  A: [
+    {
+      q: "Which multiplication equation is shown by the area model?",
+      svg: drawAreaModel("8", "10", "6", " ", " "), 
+      options: ["10 × 18 = 180", "10 × 14 = 140", "8 × 16 = 128", "6 × 18 = 108"],
+      answer: "8 × 16 = 128",
+      explanation: "The height is 8. The width is split into 10 + 6 = 16. Total area is 8 × 16 = 128."
+    },
+    {
+      q: "What is the product? 24 × 9",
+      options: ["189", "216", "276", "309"],
+      answer: "216",
+      explanation: "20×9=180, 4×9=36. Total 216."
+    },
+    {
+      q: "What is the product? 159 × 5",
+      options: ["555", "695", "755", "795"],
+      answer: "795",
+      explanation: "100×5=500, 50×5=250, 9×5=45. Total 795."
+    },
+    {
+      q: "What is the product of 8 × 1,247?",
+      options: ["9,976", "9,876", "10,476", "10,976"],
+      answer: "9,976",
+      explanation: "8×1000=8000, 8×200=1600, 8×40=320, 8×7=56. Total 9,976."
+    },
+    {
+      q: "Which of these uses expanded form and the Distributive Property to find 7 × 53?",
+      options: ["(7 × 50) + (3)", "(7 × 5) + (7 × 3)", "(7 × 50) + (7 × 3)", "(7 × 5) + (7 × 3 × 10)"],
+      answer: "(7 × 50) + (7 × 3)",
+      explanation: "53 breaks into 50 + 3."
+    },
+    {
+      q: "A bookshelf has 3 shelves. There are 4 sports books and 13 mystery books on each shelf. How many sports and mystery books are on the bookshelf?",
+      options: ["68", "51", "39", "12"],
+      answer: "51",
+      explanation: "17 books per shelf × 3 shelves = 51."
+    },
+    {
+      q: "What numbers will complete the area model to show 7 × 502?",
+      svg: drawAreaModel("7", "500", "2", "", ""),
+      options: ["3,500 and 14", "350 and 14", "350 and 2", "3,500 and 7"],
+      answer: "3,500 and 14",
+      explanation: "7×500 = 3,500. 7×2 = 14."
+    },
+    {
+      q: "What is the product of 6 × 8,400?",
+      options: ["50,400", "48,000", "52,800", "53,400"],
+      answer: "50,400",
+      explanation: "6×8000=48000, 6×400=2400. Sum = 50,400."
+    },
+    {
+      q: "When using partial products to find 8 × 24, which set of partial products is correct?",
+      options: ["160 + 32", "80 + 24", "16 + 24", "200 + 42"],
+      answer: "160 + 32",
+      explanation: "8×20=160, 8×4=32."
+    },
+    {
+      q: "What is the product of 3 × 61?",
+      options: ["183","168","181","204"],
+      answer: "183",
+      explanation: "3×60=180, 3×1=3."
+    },
+    { 
+      q: "The base-ten blocks below show a multiplication equation. (3 groups of 1 hundred, 2 tens, and 1 one)",
+      svg: drawBlocks(3, 1, 2, 1),
+      options: ["3 × 121 = 363", "3 × 110 = 330", "3 × 111 = 333", "3 × 211 = 633"], 
+      answer: "3 × 121 = 363", 
+      explanation: "3 rows of 121 equals 363."
+    },
+    {
+      q: "A display at a store contains 5 rows of 24 fruit drink bottles and 8 rows of 12 water bottles. How many total bottles are on the display?",
+      options: ["216", "132", "144", "360"],
+      answer: "216",
+      explanation: "120 fruit + 96 water = 216."
+    },
+    {
+      q: "A playhouse on a school’s playground has 2 levels. The first level is 8 feet off the ground. The second level is 14 feet higher than the first level. A tree on the playground is 2 times as tall as the playhouse. How tall is the tree?",
+      options: ["44 feet", "20 feet","32 feet","40 feet"],
+      answer: "44 feet",
+      explanation: "Level 2 is 22ft (8+14). Tree is 44ft (22×2)."
+    },
+    {
+      q: "Marley is packing boxes with cans of paint to be used with an art project. She has 80 cans of paint, and each box holds 8 cans of paint. Marley packed 6 boxes. Which equation shows how many cans of paint (p) are left?",
+      options: ["80 − 8 × 6 = p", "80 − 8 × 4 = p", "80 − 8 − 6 = p", "80 − 8 − 2 × 6 = p"],
+      answer: "80 − 8 × 6 = p",
+      explanation: "Start with 80, subtract the packed cans (6 boxes of 8)."
+    },
+    {
+      q: "Marley is packing boxes with cans of paint to be used with an art project. She has 80 cans of paint, and each box holds 8 cans of paint. Marley packed 6 boxes. How many cans of paint does Marley still need to pack?",
+      options: ["32 cans", "24 cans", "40 cans","48 cans"],
+      answer: "32 cans",
+      explanation: "6×8=48 packed. 80-48=32 left."
+    }
+  ],
+  B: [
+    {
+      q: "Which multiplication equation is shown by the area model?",
+      svg: drawAreaModel("7", "10", "8", " ", " "),
+      options: ["7 × 18 = 126", "8 × 17 = 136", "10 × 15 = 150", "10 × 17 = 170"],
+      answer: "7 × 18 = 126",
+      explanation: "Height 7. Width 10+8=18. Area 126."
+    },
+    {
+      q: "What is the product? 41 × 8",
+      options: ["328", "248", "368", "408"],
+      answer: "328",
+      explanation: "8×40=320, 8×1=8."
+    },
+    {
+      q: "What is the product? 146 × 6",
+      options: ["876", "646", "776", "846"],
+      answer: "876",
+      explanation: "600 + 240 + 36 = 876."
+    },
+    {
+      q: "What is the product of 5 × 1,327?",
+      options: ["6,635", "5,635", "6,375", "7,635"],
+      answer: "6,635",
+      explanation: "5000+1500+100+35."
+    },
+    {
+      q: "Which of these uses expanded form and the Distributive Property to find 3 × 49?",
+      options: ["(3 × 40) + (3 × 9)", "(3 × 40) + (9)", "(3 × 4) + (3 × 9)", "(3 × 4) + (3 × 9 × 10)"],
+      answer: "(3 × 40) + (3 × 9)",
+      explanation: "49 is 40 + 9."
+    },
+    {
+      q: "There are 4 rows of chairs in a classroom. There are 2 teacher chairs and 13 student chairs in each row. How many total chairs?",
+      options: ["60", "8", "52", "104"],
+      answer: "60",
+      explanation: "4 × 15 = 60."
+    },
+    { 
+      q: "What numbers will complete the area model to show 2 × 906?", 
+      svg: drawAreaModel("2", "900", "6", "", ""),
+      options: ["1,800 and 12", "180 and 12", "900 and 2", "1,800 and 6"], 
+      answer: "1,800 and 12", 
+      explanation: "Top is 900 and 6. 2×900=1800, 2×6=12." 
+    },
+    {
+      q: "What is the product of 9 × 3,500?",
+      options: ["31,500", "27,000", "28,500", "30,500"],
+      answer: "31,500",
+      explanation: "9×35=315, then add two zeros."
+    },
+    {
+      q: "Which statement about 6 × 19 is true?",
+      options: ["The tens product is 60, the ones product is 54, and the total is 114.", "The tens product is 50, ones product is 15, and the total is 65", "The tens product is 70, the ones product is 54, and the total is 124", "The tens product is 7, the ones product is 15, and the total is 22"],
+      answer: "The tens product is 60, the ones product is 54, and the total is 114.",
+      explanation: "6×10=60, 6×9=54."
+    },
+    {
+      q: "What is the product of 4 × 42?",
+      options: ["168", "126", "148", "160"],
+      answer: "168",
+      explanation: "160 + 8 = 168."
+    },
+    { 
+      q: "The base-ten blocks below show a multiplication equation. (4 groups of 2 hundreds, 1 ten, and 1 one)",
+      svg: drawBlocks(4, 2, 1, 1),
+      options: ["4 × 211 = 844", "4 × 121 = 484", "4 × 112 = 448", "4 × 221 = 884"], 
+      answer: "4 × 211 = 844", 
+      explanation: "4 rows of 211." 
+    },
+    {
+      q: "An art teacher displays 5 rows of 11 paintings and 6 rows of 21 drawings. How many total paintings and drawings are there?",
+      options: ["181", "166", "191", "211"],
+      answer: "181",
+      explanation: "55 paintings + 126 drawings = 181."
+    },
+    {
+      q: "Students are watching a school play. There are 12 fourth grade students in the first row and 9 in the second. Third graders are 3 times this amount. How many third graders are there?",
+      options: ["63", "21", "42", "72"],
+      answer: "63",
+      explanation: "(12+9)×3 = 21×3 = 63."
+    },
+    {
+      q: "Paolo has 96 rocks. He fills 6 aquariums with 12 rocks each. Which equation shows rocks left (r)?",
+      options: ["96 − 12 × 6 = r", "96 − 12 × 2 = r", "96 - 12 - 6 = r", "96 − 12 − 2 × 6 = r"],
+      answer: "96 − 12 × 6 = r",
+      explanation: "Total - (Groups × Amount)."
+    },
+    {
+      q: "Paolo has 96 rocks. He fills 6 aquariums with 12 rocks each. How many rocks are left?",
+      options: ["24 rocks", "18 rocks", "30 rocks", "36 rocks"],
+      answer: "24 rocks",
+      explanation: "96 - 72 = 24."
+    }
+  ],
+  C: [
+    {
+      q: "Which multiplication equation is shown by this area model?",
+      svg: drawAreaModel("4", "10", "5", "40", "20"),
+      options: ["4 × 15 = 60", "4 × 10 = 40", "5 × 14 = 70", "15 × 40 = 600"],
+      answer: "4 × 15 = 60",
+      explanation: "Height 4. Width 15. Total area 60."
+    },
+    {
+      q: "What is the product? 47 × 6",
+      options: ["282", "242", "302", "262"],
+      answer: "282",
+      explanation: "240 + 42 = 282."
+    },
+    {
+      q: "What is the product? 531 × 3",
+      options: ["1,593", "1,531", "1,693", "1,503"],
+      answer: "1,593",
+      explanation: "1500 + 90 + 3."
+    },
+    {
+      q: "What is the product of 4 × 2,108?",
+      options: ["8,432", "8,408", "8,032", "8,832"],
+      answer: "8,432",
+      explanation: "8000 + 400 + 32."
+    },
+    {
+      q: "Which of these uses expanded form and the Distributive Property to find 4 × 68?",
+      options: ["(4 × 60) + (4 × 8)", "(4 × 6) + (4 × 8)", "(4 × 60) + 8", "(4 × 6) + (8 × 10)"],
+      answer: "(4 × 60) + (4 × 8)",
+      explanation: "68 is 60 + 8."
+    },
+    {
+      q: "A bakery has 5 trays. 6 chocolate and 12 vanilla cupcakes on each. How many total cupcakes are there?",
+      options: ["90", "80", "18", "30"],
+      answer: "90",
+      explanation: "5 × (6+12) = 90."
+    },
+    {
+      q: "What numbers will complete the area model to show 5 × 320?",
+      svg: drawAreaModel("5", "300", "20", "", ""),
+      options: ["1,500 and 20", "305 and 20", "1,500 and 100", "150 and 20"],
+      answer: "1,500 and 100",
+      explanation: "5×300=1500 (inner), 5×20=100 (inner). Missing: 1,500 and 100."
+    },
+    {
+      q: "What is the product of 7 × 5,200?",
+      options: ["36,400", "35,400", "3,640", "36,000"],
+      answer: "36,400",
+      explanation: "35,000 + 1,400."
+    },
+    {
+      q: "When using partial products to find 4 × 35, which set is correct?",
+      options: ["120 + 20", "12 + 20", "100 + 20", "120 + 5"],
+      answer: "120 + 20",
+      explanation: "4×30=120, 4×5=20."
+    },
+    { 
+      q: "Imagine Base-Ten Blocks showing: 5 rows. Each row has 1 Hundred, 3 Tens, and 2 Ones.",
+      svg: drawBlocks(5, 1, 3, 2),
+      options: ["5 × 132 = 660", "5 × 123 = 615", "5 × 130 = 650", "3 × 132 = 396"], 
+      answer: "5 × 132 = 660", 
+      explanation: "5 rows of 132."
+    },
+    {
+      q: "A cinema has 4 rows of 15 adults and 3 rows of 10 children. How many people total?",
+      options: ["90", "60", "70", "100"],
+      answer: "90",
+      explanation: "60 adults + 30 children."
+    },
+    {
+      q: "Mrs. Lee has 50 pencils. She fills 4 cups with 8 pencils each. Which equation shows how many pencils are left?",
+      options: ["50 - 4 × 8 = p", "50 - 4 - 8 = p", "50 + 4 × 8 = p", "4 × 8 - 50 = p"],
+      answer: "50 - 4 × 8 = p",
+      explanation: "Total - Used."
+    },
+    {
+      q: "Which statement about 5 × 28 is true?",
+      options: ["The tens product is 100, the ones product is 40, total 140.", "The tens product is 50, ones is 20, total 70.", "The tens product is 20, ones is 40, total 60.", "The tens product is 10, ones is 8, total 18."],
+      answer: "The tens product is 100, the ones product is 40, total 140.",
+      explanation: "5 × 20 (tens) = 100. 5 × 8 (ones) = 40. 100 + 40 = 140."
+    },
+    {
+      q: "Mrs. Lee has 50 pencils. She fills 4 cups with 8 pencils each. How many pencils does she have left?",
+      options: ["18", "24", "12", "32"],
+      answer: "18",
+      explanation: "4 cups × 8 pencils = 32 pencils used. 50 - 32 = 18."
+    },
+    {
+      q: "A giraffe is 18 feet tall. A building is 3 times as tall as the giraffe. How tall is the building?",
+      options: ["54 feet", "36 feet", "48 feet", "64 feet"],
+      answer: "54 feet",
+      explanation: "18 × 3 = 54."
+    }
+  ]
+};
+
+/* TEST CODES CONFIGURATION */
+const TEST_CODES = {
+  "MATH5A": "A",
+  "MATH5B": "B",
+  "MATH5C": "C"
+};
+const TEACHER_CODE = "9377";
+
+const app = {
+  currentTest: [],
+  currentIndex: 0,
+  score: 0,
+  selectedAnswer: null,
+  currentForm: null,
+  studentName: "",
+  
+  // Highlight tracking variables
+  speakingElement: null,
+  originalHTML: "",
+
+  init: function() {
+    this.checkSavedProgress();
+  },
+
+  checkSavedProgress: function() {
+    const saved = localStorage.getItem('mathModuleReview');
+    const resumeContainer = document.getElementById('resume-container');
+    if(saved) {
+      resumeContainer.classList.remove('hidden');
+    } else {
+      resumeContainer.classList.add('hidden');
+    }
+  },
+
+  resumeTest: function() {
+    const saved = localStorage.getItem('mathModuleReview');
+    if(!saved) return;
+    
+    const data = JSON.parse(saved);
+    this.currentTest = data.currentTest;
+    this.currentIndex = data.currentIndex;
+    this.score = data.score;
+    this.currentForm = data.currentForm;
+    this.studentName = data.studentName || "Student";
+
+    document.getElementById("start-screen").classList.add("hidden");
+    document.getElementById("end-screen").classList.add("hidden");
+    document.getElementById("quiz-screen").classList.remove("hidden");
+    this.showQuestion();
+    stopConfetti();
+  },
+
+  validateLogin: function() {
+    const nameInput = document.getElementById("student-name").value.trim();
+    const codeInput = document.getElementById("test-code").value.trim().toUpperCase();
+    const errorMsg = document.getElementById("login-error");
+    const loginBox = document.getElementById("login-container");
+    const teacherBox = document.getElementById("teacher-screen");
+
+    if (nameInput === "") {
+      errorMsg.innerText = "Please enter your name!";
+      errorMsg.style.display = "block";
+      return;
+    }
+
+    if (codeInput === TEACHER_CODE) {
+      this.studentName = nameInput;
+      document.getElementById("teacher-student-name").innerText = nameInput;
+      loginBox.classList.add("hidden");
+      teacherBox.classList.remove("hidden");
+      errorMsg.style.display = "none";
+      return;
+    }
+
+    if (TEST_CODES[codeInput]) {
+      this.studentName = nameInput;
+      this.startTest(TEST_CODES[codeInput]);
+    } else {
+      errorMsg.innerText = "Invalid Code. Try math5A, math5B, or math5C.";
+      errorMsg.style.display = "block";
+    }
+  },
+
+  cancelTeacherMode: function() {
+    document.getElementById("teacher-screen").classList.add("hidden");
+    document.getElementById("login-container").classList.remove("hidden");
+  },
+  
+  startTest: function(form) {
+    if(!tests[form]) return;
+    
+    // Clear old saves when starting new
+    localStorage.removeItem('mathModuleReview');
+    this.checkSavedProgress();
+
+    this.currentForm = form;
+    this.currentTest = JSON.parse(JSON.stringify(tests[form]));
+    
+    // Randomize Questions & Answers
+    this.currentTest.sort(() => Math.random() - 0.5);
+    this.currentTest.forEach(q => q.options.sort(() => Math.random() - 0.5));
+    
+    this.currentIndex = 0;
+    this.score = 0;
+    
+    this.saveProgress(); // Initial Save
+
+    document.getElementById("start-screen").classList.add("hidden");
+    document.getElementById("end-screen").classList.add("hidden");
+    document.getElementById("quiz-screen").classList.remove("hidden");
+    this.showQuestion();
+    stopConfetti();
+  },
+
+  saveProgress: function() {
+    const data = {
+      currentTest: this.currentTest,
+      currentIndex: this.currentIndex,
+      score: this.score,
+      currentForm: this.currentForm,
+      studentName: this.studentName
+    };
+    localStorage.setItem('mathModuleReview', JSON.stringify(data));
+  },
+
+  showQuestion: function() {
+    this.resetSpeech(); // Clear any ongoing speech/highlights
+    this.selectedAnswer = null;
+    const qObj = this.currentTest[this.currentIndex];
+    const total = this.currentTest.length;
+
+    document.getElementById("progress-text").innerText = `Question ${this.currentIndex + 1} of ${total}`;
+    document.getElementById("score-text").innerText = `Score: ${this.score}`;
+    document.getElementById("progress-fill").style.width = `${(this.currentIndex / total) * 100}%`;
+    document.getElementById("question-text").innerText = qObj.q;
+
+    // SVG Rendering
+    const visualContainer = document.getElementById("visual-container");
+    visualContainer.innerHTML = "";
+    if (qObj.svg) {
+      visualContainer.classList.remove("hidden");
+      visualContainer.innerHTML = qObj.svg;
+    } else {
+      visualContainer.classList.add("hidden");
+    }
+
+    document.getElementById("feedback").style.display = "none";
+    document.getElementById("submit-btn").disabled = true;
+    document.getElementById("submit-btn").classList.remove("hidden");
+    document.getElementById("next-btn").classList.add("hidden");
+
+    const answersDiv = document.getElementById("answers");
+    answersDiv.innerHTML = "";
+    
+    qObj.options.forEach(opt => {
+      const btn = document.createElement("button");
+      btn.className = "answer-btn";
+      
+      // Create separate spans for text and speaker to target text for highlight
+      const textSpan = document.createElement("span");
+      textSpan.innerText = opt;
+      textSpan.style.flex = "1";
+      
+      const speaker = document.createElement("span");
+      speaker.className = "speak-btn-mini";
+      speaker.innerText = "🔊";
+      speaker.onclick = (e) => {
+        e.stopPropagation();
+        // Pass the actual element containing the text for highlighting
+        app.speakText(opt, textSpan); 
+      };
+
+      btn.appendChild(textSpan);
+      btn.appendChild(speaker);
+
+      btn.onclick = (e) => {
+        if(e.target.classList.contains('speak-btn-mini')) return;
+        this.selectAnswer(opt, btn);
+      };
+      answersDiv.appendChild(btn);
+    });
+  },
+
+  selectAnswer: function(answer, btn) {
+    this.selectedAnswer = answer;
+    document.querySelectorAll(".answer-btn").forEach(b => b.classList.remove("selected"));
+    btn.classList.add("selected");
+    document.getElementById("submit-btn").disabled = false;
+  },
+
+  submitAnswer: function() {
+    this.resetSpeech();
+    const qObj = this.currentTest[this.currentIndex];
+    const btns = document.querySelectorAll(".answer-btn");
+    const fb = document.getElementById("feedback");
+    
+    btns.forEach(b => b.disabled = true);
+    document.getElementById("submit-btn").classList.add("hidden");
+    document.getElementById("next-btn").classList.remove("hidden");
+    document.getElementById("next-btn").focus();
+
+    let isCorrect = (this.selectedAnswer === qObj.answer);
+    
+    if (isCorrect) {
+      this.score++;
+      fb.style.backgroundColor = "#d4edda";
+      fb.style.color = "#155724";
+      fb.style.borderColor = "#c3e6cb";
+      fb.innerHTML = `<strong>✅ Correct!</strong><br>${qObj.explanation}`;
+      Array.from(btns).find(b => b.classList.contains("selected")).classList.add("correct");
+    } else {
+      fb.style.backgroundColor = "#f8d7da";
+      fb.style.color = "#721c24";
+      fb.style.borderColor = "#f5c6cb";
+      fb.innerHTML = `<strong>❌ Incorrect.</strong><br>Correct: ${qObj.answer}<br>${qObj.explanation}`;
+      Array.from(btns).find(b => b.classList.contains("selected")).classList.add("incorrect");
+    }
+    fb.style.display = "block";
+  },
+
+  nextQuestion: function() {
+    this.resetSpeech();
+    this.currentIndex++;
+    
+    // Save progress after moving to next question (or finishing)
+    if (this.currentIndex < this.currentTest.length) {
+      this.saveProgress(); 
+      this.showQuestion();
+    } else {
+      this.endTest();
+    }
+  },
+
+  endTest: function() {
+    // Clear save on completion
+    localStorage.removeItem('mathModuleReview');
+    this.checkSavedProgress();
+
+    document.getElementById("quiz-screen").classList.add("hidden");
+    document.getElementById("end-screen").classList.remove("hidden");
+    
+    const percent = Math.round((this.score / this.currentTest.length) * 100);
+    
+    // Determine Letter Grade
+    let letter = "F";
+    let color = "#dc3545"; // Red
+    if (percent >= 90) { letter = "A"; color = "#28a745"; } // Green
+    else if (percent >= 80) { letter = "B"; color = "#0074d9"; } // Blue
+    else if (percent >= 70) { letter = "C"; color = "#fd7e14"; } // Orange
+    else if (percent >= 60) { letter = "D"; color = "#ffc107"; } // Yellow
+
+    // DOM Updates
+    document.getElementById("student-display-name").innerText = `Name: ${this.studentName}`;
+    document.getElementById("final-percent").innerText = `${percent}%`;
+    
+    const letterElem = document.getElementById("final-letter-grade");
+    letterElem.innerText = letter;
+    letterElem.style.color = color;
+
+    document.getElementById("final-score").innerText = `(${this.score} out of ${this.currentTest.length})`;
+    
+    let msg = "";
+    if (percent === 100) msg = "🌟 Perfect Score! Amazing job!";
+    else if (percent >= 80) msg = "👍 Great work! You are ready.";
+    else if (percent >= 60) msg = "👌 Good effort. Keep practicing!";
+    else msg = "💡 Don't give up! Review the topics and try again.";
+    
+    document.getElementById("final-msg").innerText = msg;
+
+    // Confetti ONLY if 70 or higher
+    if(percent >= 70) startConfetti();
+  },
+
+  restart: function() {
+    stopConfetti();
+    document.getElementById("end-screen").classList.add("hidden");
+    document.getElementById("start-screen").classList.remove("hidden");
+    document.getElementById("login-container").classList.remove("hidden");
+    document.getElementById("teacher-screen").classList.add("hidden");
+    
+    // Reset inputs
+    document.getElementById("student-name").value = "";
+    document.getElementById("test-code").value = "";
+    document.getElementById("login-error").style.display = "none";
+    
+    this.checkSavedProgress();
+  },
+
+  speakCurrentQuestion: function() {
+    const qText = this.currentTest[this.currentIndex].q;
+    const qElem = document.getElementById("question-text");
+    this.speakText(qText, qElem);
+  },
+
+  // Helper to stop speech and restore original HTML text (remove highlights)
+  resetSpeech: function() {
+    window.speechSynthesis.cancel();
+    if (this.speakingElement && this.originalHTML) {
+      this.speakingElement.innerHTML = this.originalHTML;
+      this.speakingElement = null;
+      this.originalHTML = "";
+    }
+  },
+
+  speakText: function(text, element) {
+    this.resetSpeech(); // Stop previous speech
+    
+    // Store state to restore later
+    this.speakingElement = element;
+    this.originalHTML = element.innerHTML;
+
+    const u = new SpeechSynthesisUtterance(text);
+    
+    // "Karaoke" Logic: On boundary, highlight the specific word
+    u.onboundary = (event) => {
+      // Find the word boundary
+      const wordStart = event.charIndex;
+      let wordEnd = text.indexOf(' ', wordStart + 1);
+      if (wordEnd === -1) wordEnd = text.length;
+      
+      const before = text.substring(0, wordStart);
+      const word = text.substring(wordStart, wordEnd);
+      const after = text.substring(wordEnd);
+
+      // Inject highlight span
+      element.innerHTML = `${before}<span class="highlight-word">${word}</span>${after}`;
+    };
+
+    u.onend = () => {
+      this.resetSpeech(); // Cleanup highlights when done
+    };
+
+    window.speechSynthesis.speak(u);
+  }
+};
+
+/* Initialize Resume Button Check on Load */
+app.init();
+
+/* CONFETTI ENGINE (Vanilla JS) */
+const canvas = document.getElementById("confetti-canvas");
+const ctx = canvas.getContext("2d");
+let particles = [];
+let animationId = null;
+
+function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+window.addEventListener("resize", resize); resize();
+
+function startConfetti() {
+  particles = [];
+  const colors = ["#0074d9", "#2ecc40", "#ff4136", "#ffdc00", "#b10dc9"];
+  for(let i=0; i<150; i++) {
+    particles.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height - canvas.height,
+      c: colors[Math.floor(Math.random() * colors.length)],
+      s: Math.random() * 5 + 3,
+      d: Math.random() * 5 + 2
+    });
+  }
+  animate();
+}
+
+function animate() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  particles.forEach(p => {
+    ctx.fillStyle = p.c;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.s, 0, Math.PI * 2);
+    ctx.fill();
+    p.y += p.d;
+    if(p.y > canvas.height) p.y = -10;
+  });
+  animationId = requestAnimationFrame(animate);
+}
+
+function stopConfetti() {
+  if(animationId) cancelAnimationFrame(animationId);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
+</script>
+</body>
+</html>
