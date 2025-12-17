@@ -229,6 +229,7 @@
           <button class="teacher-btn" onclick="app.startTest('A')">Assign Form A</button>
           <button class="teacher-btn" onclick="app.startTest('B')">Assign Form B</button>
           <button class="teacher-btn" onclick="app.startTest('C')">Assign Form C</button>
+          <button class="teacher-btn" onclick="app.startTest('D')">Assign Form D</button>
         </div>
         
         <br>
@@ -606,6 +607,101 @@ const tests = {
       answer: "54 feet",
       explanation: "18 × 3 = 54."
     }
+  ],
+  D: [
+    {
+      q: "Which multiplication equation is shown by this area model?",
+      svg: drawAreaModel("3", "10", "4", "30", "12"),
+      options: ["3 × 14 = 42", "3 × 10 = 30", "4 × 13 = 52", "13 × 30 = 390"],
+      answer: "3 × 14 = 42",
+      explanation: "Height 3. Width 14 (10+4). Total area 42."
+    },
+    {
+      q: "What is the product? 38 × 5",
+      options: ["190", "150", "200", "180"],
+      answer: "190",
+      explanation: "150 + 40 = 190."
+    },
+    {
+      q: "What is the product? 621 × 4",
+      options: ["2,484", "2,404", "2,500", "2,464"],
+      answer: "2,484",
+      explanation: "2400 + 80 + 4."
+    },
+    {
+      q: "What is the product of 3 × 4,207?",
+      options: ["12,621", "12,607", "12,221", "12,021"],
+      answer: "12,621",
+      explanation: "12000 + 600 + 21."
+    },
+    {
+      q: "Which of these uses expanded form and the Distributive Property to find 5 × 46?",
+      options: ["(5 × 40) + (5 × 6)", "(5 × 4) + (5 × 6)", "(5 × 40) + 6", "(5 × 4) + (6 × 10)"],
+      answer: "(5 × 40) + (5 × 6)",
+      explanation: "46 is 40 + 6."
+    },
+    {
+      q: "A store has 4 bags. Each bag has 7 red apples and 13 green apples. How many total apples?",
+      options: ["80", "60", "24", "40"],
+      answer: "80",
+      explanation: "4 × (7+13) = 80."
+    },
+    {
+      q: "What numbers will complete the area model to show 6 × 450?",
+      svg: drawAreaModel("6", "400", "50", "", ""),
+      options: ["2,400 and 300", "240 and 300", "2,400 and 30", "240 and 30"],
+      answer: "2,400 and 300",
+      explanation: "6×400=2,400 (inner), 6×50=300 (inner). Missing: 2,400 and 300."
+    },
+    {
+      q: "What is the product of 8 × 4,100?",
+      options: ["32,800", "32,100", "3,280", "32,000"],
+      answer: "32,800",
+      explanation: "32,000 + 800."
+    },
+    {
+      q: "When using partial products to find 6 × 24, which set is correct?",
+      options: ["120 + 24", "12 + 24", "100 + 24", "120 + 4"],
+      answer: "120 + 24",
+      explanation: "6×20=120, 6×4=24."
+    },
+    { 
+      q: "Imagine Base-Ten Blocks showing: 4 rows. Each row has 2 Hundreds, 1 Ten, and 3 Ones.",
+      svg: drawBlocks(4, 2, 1, 3),
+      options: ["4 × 213 = 852", "4 × 123 = 492", "4 × 210 = 840", "3 × 213 = 639"], 
+      answer: "4 × 213 = 852", 
+      explanation: "4 rows of 213."
+    },
+    {
+      q: "A garden has 3 rows of 12 carrots and 2 rows of 8 beets. How many vegetables total?",
+      options: ["52", "40", "36", "48"],
+      answer: "52",
+      explanation: "36 carrots + 16 beets."
+    },
+    {
+      q: "Mr. Jones has 65 stickers. He fills 3 pages with 9 stickers each. Which equation shows how many stickers are left?",
+      options: ["65 - 3 × 9 = s", "65 - 3 - 9 = s", "65 + 3 × 9 = s", "3 × 9 - 65 = s"],
+      answer: "65 - 3 × 9 = s",
+      explanation: "Total - Used."
+    },
+    {
+      q: "Which statement about 4 × 36 is true?",
+      options: ["The tens product is 120, the ones product is 24, total 144.", "The tens product is 30, ones is 24, total 54.", "The tens product is 12, ones is 24, total 36.", "The tens product is 10, ones is 6, total 16."],
+      answer: "The tens product is 120, the ones product is 24, total 144.",
+      explanation: "4 × 30 (tens) = 120. 4 × 6 (ones) = 24. 120 + 24 = 144."
+    },
+    {
+      q: "Mr. Jones has 65 stickers. He fills 3 pages with 9 stickers each. How many stickers does he have left?",
+      options: ["38", "28", "48", "36"],
+      answer: "38",
+      explanation: "3 pages × 9 stickers = 27 stickers used. 65 - 27 = 38."
+    },
+    {
+      q: "A dog weighs 14 pounds. A child is 4 times as heavy as the dog. How heavy is the child?",
+      options: ["56 pounds", "48 pounds", "42 pounds", "64 pounds"],
+      answer: "56 pounds",
+      explanation: "14 × 4 = 56."
+    }
   ]
 };
 
@@ -613,7 +709,8 @@ const tests = {
 const TEST_CODES = {
   "MATH5A": "A",
   "MATH5B": "B",
-  "MATH5C": "C"
+  "MATH5C": "C",
+  "MATH5D": "D"
 };
 const TEACHER_CODE = "9377";
 
@@ -687,7 +784,7 @@ const app = {
       this.studentName = nameInput;
       this.startTest(TEST_CODES[codeInput]);
     } else {
-      errorMsg.innerText = "Invalid Code. Try math5A, math5B, or math5C.";
+      errorMsg.innerText = "Invalid Code. Try math5A, math5B, math5C, or math5D.";
       errorMsg.style.display = "block";
     }
   },
